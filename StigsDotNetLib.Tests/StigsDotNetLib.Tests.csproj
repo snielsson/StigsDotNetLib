@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="LICENSE.txt" />
+    <None Remove="StigsDotNetLib.Tests.csproj.DotSettings" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include=".TestData\Extensions\EnumExtensionsTestData\TestEnumEmpty.cs" />
+    <Compile Include=".TestData\Extensions\EnumExtensionsTestData\TestEnumEmptyFlags.cs" />
+    <Compile Include=".TestData\Extensions\EnumExtensionsTestData\TestEnumWithFlagValues.cs" />
+    <Compile Include=".TestData\Extensions\EnumExtensionsTestData\TestEnumWithOneNonDefaultValue.cs" />
+    <Compile Include=".TestData\Extensions\EnumExtensionsTestData\TestEnumWithOneValue.cs" />
+    <Compile Include=".TestData\Extensions\EnumExtensionsTestData\TestEnumWithSeveralNonDefaultUnorderedValues.cs" />
+    <Compile Include=".TestData\Extensions\EnumExtensionsTestData\TestEnumWithSeveralNonDefaultValues.cs" />
+    <Compile Include=".TestData\Extensions\EnumExtensionsTestData\TestEnumWithSeveralValues.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="Shouldly" Version="3.0.2" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include=".TestData\Xml\" />
+    <Folder Include="Xml\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StigsDotNetLib\StigsDotNetLib.csproj" />
+  </ItemGroup>
+
+</Project>
