@@ -1,0 +1,3 @@
+﻿# Stig's .Net library
+
+
