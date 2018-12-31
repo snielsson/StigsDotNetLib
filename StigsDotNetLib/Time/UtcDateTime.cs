@@ -8,57 +8,66 @@ namespace StigsDotNetLib.Time {
 	[JsonConverter(typeof(JsonConverter))]
 	public struct UtcDateTime : IEquatable<UtcDateTime>, IComparable<UtcDateTime> {
 		public class JsonConverter : Newtonsoft.Json.JsonConverter {
-			public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) => writer.WriteRawValue(((UtcDateTime) value)._value.ToJson());
+			public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) => writer.WriteRawValue(((UtcDateTime) value).Value.ToJson());
 			public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) => new UtcDateTime((DateTime) reader.Value);
 			public override bool CanConvert(Type objectType) => objectType == typeof(UtcDateTime);
 		}
 
-		private readonly DateTime _value;
-		public UtcDateTime(DateTime dateTime) => _value = new DateTime(dateTime.Ticks, DateTimeKind.Utc);
-		public UtcDateTime(long ticks) => _value = new DateTime(ticks, DateTimeKind.Utc);
-		public UtcDateTime(int year, int month = 1, int day = 1, int hour = 0, int minute = 0, int second = 0) => _value = new DateTime(year, month, day, hour, minute, second, DateTimeKind.Utc);
-		public static implicit operator DateTime(UtcDateTime x) => x._value;
+		public DateTime Value { get; }
+		public UtcDateTime(DateTime dateTime) => Value = new DateTime(dateTime.Ticks, DateTimeKind.Utc);
+		public UtcDateTime(long ticks) => Value = new DateTime(ticks, DateTimeKind.Utc);
+		public UtcDateTime(int year, int month = 1, int day = 1, int hour = 0, int minute = 0, int second = 0) => Value = new DateTime(year, month, day, hour, minute, second, DateTimeKind.Utc);
+		public static implicit operator DateTime(UtcDateTime x) => x.Value;
 		public static implicit operator string(UtcDateTime x) => x.ToString();
 		public static implicit operator UtcDateTime(string x) => DateTime.Parse(x);
 		public static implicit operator UtcDateTime(DateTime x) => new UtcDateTime(x.Ticks);
-		public long Ticks => _value.Ticks;
 
-		public DateTimeKind Kind => _value.Kind;
 
-		public UtcDateTime Date => _value.Date;
 
-		public DayOfWeek DayOfWeek => _value.DayOfWeek;
+		public long Ticks => Value.Ticks;
 
-		public TimeSpan TimeOfDay => _value.TimeOfDay;
+		public DateTimeKind Kind => Value.Kind;
 
-		public int Year => _value.Year;
+		public UtcDateTime Date => Value.Date;
 
-		public int Month => _value.Month;
+		public DayOfWeek DayOfWeek => Value.DayOfWeek;
 
-		public int Day => _value.Day;
+		public TimeSpan TimeOfDay => Value.TimeOfDay;
+
+		public int Year => Value.Year;
+
+		public int Month => Value.Month;
+
+		public int Day => Value.Day;
 
 		public static UtcDateTime MaxValue => new DateTime(DateTime.MaxValue.Ticks, DateTimeKind.Utc);
 		public static UtcDateTime MinValue => new DateTime(DateTime.MinValue.Ticks, DateTimeKind.Utc);
 		public static int SizeInBytes { get; } = sizeof(long);
+		private static UtcDateTime? _now;
+		public static UtcDateTime Now { get => _now ?? DateTime.UtcNow; }
+		public static UtcDateTime Set(UtcDateTime? val) {
+			_now = val;
+			return Now;
+		}
 
-		public bool IsMultipleOf(TimeSpan ts) => _value.IsMultipleOf(ts);
+		public bool IsMultipleOf(TimeSpan ts) => Value.IsMultipleOf(ts);
 
 		public DateTime ToLocalTime(TimeZoneInfo timeZoneInfo) {
-			var dt = new DateTime(TimeZoneInfo.ConvertTimeFromUtc(_value, timeZoneInfo).Ticks, DateTimeKind.Local);
+			var dt = new DateTime(TimeZoneInfo.ConvertTimeFromUtc(Value, timeZoneInfo).Ticks, DateTimeKind.Local);
 			return dt;
 		}
 
-		public DateTime ToLocalTime(string s) => new DateTime(TimeZoneInfo.ConvertTimeFromUtc(_value, s.ToTimeZoneInfo()).Ticks, DateTimeKind.Local);
+		public DateTime ToLocalTime(string s) => new DateTime(TimeZoneInfo.ConvertTimeFromUtc(Value, s.ToTimeZoneInfo()).Ticks, DateTimeKind.Local);
 
-		public bool Equals(UtcDateTime other) => _value.Equals(other._value);
-		public int CompareTo(UtcDateTime other) => _value.CompareTo(other._value);
+		public bool Equals(UtcDateTime other) => Value.Equals(other.Value);
+		public int CompareTo(UtcDateTime other) => Value.CompareTo(other.Value);
 
 		public override bool Equals(object obj) {
 			if (obj is null) return false;
 			return obj is UtcDateTime time && Equals(time);
 		}
 
-		public override int GetHashCode() => _value.GetHashCode();
+		public override int GetHashCode() => Value.GetHashCode();
 
 		public static bool operator ==(UtcDateTime left, UtcDateTime right) => left.Equals(right);
 
@@ -86,19 +95,19 @@ namespace StigsDotNetLib.Time {
 
 		public override string ToString() => ToString("yyyy-MM-dd HH:mm:ss UTC");
 
-		public static UtcDateTime operator +(UtcDateTime left, TimeSpan right) => new UtcDateTime(left._value + right);
-		public static UtcDateTime operator -(UtcDateTime left, TimeSpan right) => new UtcDateTime(left._value - right);
-		public static TimeSpan operator -(UtcDateTime left, UtcDateTime right) => left._value - right._value;
-		public string ToString(string format) => _value.ToString(format);
-		public UtcDateTime Add(TimeSpan ts) => new UtcDateTime(_value.Add(ts).Ticks);
-		public UtcDateTime AddTicks(long val) => new UtcDateTime(_value.AddTicks(val));
-		public UtcDateTime AddMilliseconds(double val) => new UtcDateTime(_value.AddMilliseconds(val));
-		public UtcDateTime AddSeconds(double val) => new UtcDateTime(_value.AddSeconds(val));
-		public UtcDateTime AddMinutes(double val) => new UtcDateTime(_value.AddMinutes(val));
-		public UtcDateTime AddHours(double val) => new UtcDateTime(_value.AddHours(val));
-		public UtcDateTime AddDays(double val) => new UtcDateTime(_value.AddDays(val));
-		public UtcDateTime AddMonths(int val) => new UtcDateTime(_value.AddMonths(val));
-		public UtcDateTime AddYears(int val) => new UtcDateTime(_value.AddYears(val));
-		public int ToUnixTime() => _value.ToUnixTime();
+		public static UtcDateTime operator +(UtcDateTime left, TimeSpan right) => new UtcDateTime(left.Value + right);
+		public static UtcDateTime operator -(UtcDateTime left, TimeSpan right) => new UtcDateTime(left.Value - right);
+		public static TimeSpan operator -(UtcDateTime left, UtcDateTime right) => left.Value - right.Value;
+		public string ToString(string format) => Value.ToString(format);
+		public UtcDateTime Add(TimeSpan ts) => new UtcDateTime(Value.Add(ts).Ticks);
+		public UtcDateTime AddTicks(long val) => new UtcDateTime(Value.AddTicks(val));
+		public UtcDateTime AddMilliseconds(double val) => new UtcDateTime(Value.AddMilliseconds(val));
+		public UtcDateTime AddSeconds(double val) => new UtcDateTime(Value.AddSeconds(val));
+		public UtcDateTime AddMinutes(double val) => new UtcDateTime(Value.AddMinutes(val));
+		public UtcDateTime AddHours(double val) => new UtcDateTime(Value.AddHours(val));
+		public UtcDateTime AddDays(double val) => new UtcDateTime(Value.AddDays(val));
+		public UtcDateTime AddMonths(int val) => new UtcDateTime(Value.AddMonths(val));
+		public UtcDateTime AddYears(int val) => new UtcDateTime(Value.AddYears(val));
+		public int ToUnixTime() => Value.ToUnixTime();
 	}
 }
