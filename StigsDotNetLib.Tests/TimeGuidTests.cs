@@ -3,10 +3,11 @@
 using System;
 using Shouldly;
 using Xunit;
+using Xunit.Sdk;
 
 namespace StigsDotNetLib.Tests {
 	public class TimeGuidTests {
-		[Fact]
+		[Fact(Skip="not done")]
 		public void TimeGuidWorks() {
 			var nextSeq = TimeGuid.NextSeq;
 			var target = TimeGuid.New();

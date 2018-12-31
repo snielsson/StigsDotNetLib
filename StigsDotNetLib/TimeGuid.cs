@@ -2,24 +2,25 @@
 
 using System;
 using System.Threading;
+using StigsDotNetLib.Time;
 
 namespace StigsDotNetLib {
 	public struct TimeGuid : IEquatable<TimeGuid>, IComparable<TimeGuid> {
-		public DateTime TimeStamp { get; }
+		public UtcDateTime TimeStamp { get; }
 		private readonly int _seq;
 		public uint Seq => (uint)_seq-int.MaxValue;
 		public int Tag { get; }
-		public static Func<DateTime> Clock = null;
-		public static DateTime Now = Clock?.Invoke() ?? DateTime.UtcNow;
+		public static Func<UtcDateTime> Clock = null;
+		public static UtcDateTime Now = Clock?.Invoke() ?? UtcDateTime.Now;
 		private static int _nextSeq = int.MaxValue;
 		public static uint NextSeq => (uint)_nextSeq-int.MaxValue;
 
-		public TimeGuid(DateTime timeStamp, int seq, int tag) {
+		public TimeGuid(UtcDateTime timeStamp, int seq, int tag) {
 			TimeStamp = timeStamp;
 			_seq = seq;
 			Tag = tag;
 		}
-		public static TimeGuid New(DateTime? now = null, int tag = 0) => new TimeGuid(now ?? Now, Interlocked.Increment(ref _nextSeq), tag);
+		public static TimeGuid New(UtcDateTime? now = null, int tag = 0) => new TimeGuid(now ?? Now, Interlocked.Increment(ref _nextSeq), tag);
 		public static implicit operator Guid(TimeGuid x) {
 			var bytes = new byte[16];
 			Array.Copy(BitConverter.GetBytes(x.TimeStamp.Ticks), bytes, 8);
@@ -29,7 +30,7 @@ namespace StigsDotNetLib {
 		}
 		public static implicit operator TimeGuid(Guid x) {
 			byte[] bytes = x.ToByteArray();
-			return new TimeGuid(new DateTime(BitConverter.ToInt64(bytes, 0)), BitConverter.ToInt32(bytes, 8), BitConverter.ToInt32(bytes, 12));
+			return new TimeGuid(new UtcDateTime(BitConverter.ToInt64(bytes, 0)), BitConverter.ToInt32(bytes, 8), BitConverter.ToInt32(bytes, 12));
 		}
 		public bool Equals(TimeGuid other) => TimeStamp == other.TimeStamp && Seq == other.Seq && Tag == other.Tag;
 		public override bool Equals(object obj) {

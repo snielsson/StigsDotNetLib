@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Xml\**" />
+    <EmbeddedResource Remove="Xml\**" />
+    <None Remove="Xml\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="LICENSE.txt" />
     <None Remove="StigsDotNetLib.Tests.csproj.DotSettings" />
   </ItemGroup>
@@ -34,7 +40,6 @@
 
   <ItemGroup>
     <Folder Include=".TestData\Xml\" />
-    <Folder Include="Xml\" />
   </ItemGroup>
 
   <ItemGroup>

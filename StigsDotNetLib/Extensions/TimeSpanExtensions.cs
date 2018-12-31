@@ -3,6 +3,7 @@
 using System;
 
 namespace StigsDotNetLib.Extensions {
+
 	public static class TimeSpanExtensions {
 		public static long AsMultiplesOf(this TimeSpan @this, TimeSpan timeSpan) => @this.Ticks.AsMultiplesOf(timeSpan.Ticks);
 
