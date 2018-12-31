@@ -5,6 +5,7 @@ using Shouldly;
 using Xunit;
 
 namespace StigsDotNetLib.Tests {
+
 	public class TimeGuidTests {
 		[Fact]
 		public void TimeGuidWorks() {
